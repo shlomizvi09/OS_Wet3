@@ -27,24 +27,28 @@ void Game::_init_game() {
     // Testing of your implementation will presume all threads are started here
     m_gen_num = params.n_gen;
     m_thread_num = params.n_thread;
-	interactive_on = params.interactive_on;
-	print_on = params.print_on;
+    interactive_on = params.interactive_on;
+    print_on = params.print_on;
     vector<string> board_lines = utils::read_lines(this->params.filename);
     for (size_t i = 0; i < board_lines.size(); i++) {
         vector<string> line = utils::split(board_lines[i], ' ');
-		for (size_t j = 0; i < line.size(); j++)
-		{
-			uint tmp_cell = std::stoi(line[j]);
-			curr_board[i].push_back(tmp_cell);
-			next_board[i].push_back(0);
-		}
-		board_width = line.size();
-	}
-	board_heigt = board_lines.size();
-	
-	
-	
-	
+        for (size_t j = 0; i < line.size(); j++) {
+            uint tmp_cell = std::stoi(line[j]);
+            curr_board[i].push_back(tmp_cell);
+            next_board[i].push_back(0);
+        }
+        board_width = line.size();
+    }
+    board_heigt = board_lines.size();
+
+    for (uint i = 0; i < m_thread_num; i++) {
+        Thread* temp_thread = new Thread_worker(i, jobs_queue);
+        m_threadpool.push_back(temp_thread);
+    }
+
+    for (size_t i = 0; i < m_thread_num; i++) {
+        m_threadpool[i]->start();
+    }
 }
 
 void Game::_step(uint curr_gen) {
