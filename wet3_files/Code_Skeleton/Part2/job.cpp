@@ -2,7 +2,7 @@
 
 #include <algorithm>
 
-Job::Job(const matrix &curr_board, matrix &next_board,
+Job::Job(const int_mat &curr_board, int_mat &next_board,
          uint top_line, uint bottom_line) : curr_board(curr_board),
                                             next_board(next_board),
                                             top_row(top_row),

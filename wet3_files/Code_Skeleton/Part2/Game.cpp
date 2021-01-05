@@ -76,27 +76,21 @@ inline void Game::print_board(const char* header) {
         if (header != NULL)
             cout << "<------------" << header << "------------>" << endl;
 
-        // TODO: Print the board
+        cout << u8"╔" << string(u8"═") * this->board_heigt << u8"╗" << endl;
+        for (uint i = 0; i < this->board_heigt; ++i) {
+            cout << u8"║";
+            for (uint j = 0; j < this->board_width; ++j) {
+                if (curr_board[i][j] > 0)
+                    cout << colors[curr_board[i][j] % 7] << u8"█" << RESET;
+                else
+                    cout << u8"░";
+            }
+            cout << u8"║" << endl;
+        }
+        cout << u8"╚" << string(u8"═") * this->board_width << u8"╝" << endl;
 
         // Display for GEN_SLEEP_USEC micro-seconds on screen
         if (interactive_on)
             usleep(GEN_SLEEP_USEC);
     }
 }
-
-/* Function sketch to use for printing the board. You will need to decide its placement and how exactly 
-	to bring in the field's parameters. 
-
-	    cout << u8"╔" << string(u8"═") * field_width << u8"╗" << endl;
-		for (uint i = 0; i < field_height ++i) {
-			cout << u8"║";
-			for (uint j = 0; j < field_width; ++j) {
-                if (field[i][j] > 0)
-                    cout << colors[field[i][j] % 7] << u8"█" << RESET;
-                else
-                    cout << u8"░";
-			}
-			cout << u8"║" << endl;
-		}
-		cout << u8"╚" << string(u8"═") * field_width << u8"╝" << endl;
-*/

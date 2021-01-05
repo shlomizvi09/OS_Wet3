@@ -31,11 +31,11 @@ struct game_params {
     bool print_on;
 };
 
-typedef vector<vector<uint>> matrix;
-
 /*--------------------------------------------------------------------------------
 									Class Declaration
 --------------------------------------------------------------------------------*/
+class Thread_worker;
+
 class Game {
    public:
     Game(game_params p);
@@ -68,7 +68,7 @@ class Game {
     game_params params;
     uint board_width;
     uint board_heigt;
-    matrix curr_board;
-    matrix next_board;
+    int_mat curr_board;
+    int_mat next_board;
 };
 #endif

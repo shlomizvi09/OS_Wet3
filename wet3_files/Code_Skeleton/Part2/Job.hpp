@@ -5,16 +5,16 @@
 
 class Job {
    private:
-    const matrix &curr_board;
-    matrix &next_board;
+    const int_mat &curr_board;
+    int_mat &next_board;
     uint top_row;
     uint bottom_row;
     uint width;
     uint height;
 
    public:
-    Job(const matrix &curr_board, matrix &next_board,
-        uint top_line, uint bottom_line);
+    Job(const int_mat &curr_board, int_mat &next_board,
+        uint top_row, uint bottom_row) : curr_board(curr_board), next_board(next_board), top_row(top_row), bottom_row(bottom_row), width(width), height(height) {}
     ~Job() {}
 
     uint get_num_of_live_neighbors(int i, int j);
@@ -23,11 +23,5 @@ class Job {
     void give_birth(int i, int j);
     void survive(int i, int j);
 };
-
-Job::Job(/* args */) {
-}
-
-Job::~Job() {
-}
 
 #endif
