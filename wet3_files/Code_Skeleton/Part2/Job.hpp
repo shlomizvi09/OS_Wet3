@@ -3,7 +3,7 @@
 #include "Thread.hpp"
 
 class Job {
-   private:
+   public:
     int_mat *curr_board;
     int_mat *next_board;
     uint top_row;
@@ -12,9 +12,9 @@ class Job {
     uint height;
     int phase;
 
-   public:
     Job(int_mat *curr_board, int_mat *next_board,
-        uint top_row, uint bottom_row, int phase);
+        uint top_row, uint bottom_row, uint width, uint height, int phase);
+    Job(const Job &old_job);
     ~Job() {}
     void execute();
     uint get_num_of_live_neighbors(int i, int j);

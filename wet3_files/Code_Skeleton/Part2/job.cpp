@@ -3,10 +3,12 @@
 
 
 Job::Job(int_mat *curr_board, int_mat *next_board,
-         uint top_row, uint bottom_row, int phase) : curr_board(curr_board),
+         uint top_row, uint bottom_row,uint width, uint height, int phase) : curr_board(curr_board),
                                                      next_board(next_board),
                                                      top_row(top_row),
                                                      bottom_row(bottom_row),
+                                                     width(width),
+                                                     height(height),
                                                      phase(phase) {}
 
 uint Job::get_num_of_live_neighbors(int i, int j) {
