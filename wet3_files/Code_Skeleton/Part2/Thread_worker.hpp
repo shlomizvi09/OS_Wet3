@@ -8,10 +8,10 @@
 class Thread_worker : public Thread {
    private:
     /* data */
-    PCQueue<Job> &jobs_queue;
+    PCQueue<Job> *jobs_queue;
 
    public:
-    Thread_worker(uint thread_id, PCQueue<Job> &jobs_queue) : Thread(thread_id), jobs_queue(jobs_queue) {}
+    Thread_worker(uint thread_id, PCQueue<Job> *jobs_queue) : Thread(thread_id), jobs_queue(jobs_queue) {}
     ~Thread_worker() {}
 
     void thread_workload() override {

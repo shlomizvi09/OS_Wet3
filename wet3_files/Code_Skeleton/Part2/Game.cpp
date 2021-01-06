@@ -37,24 +37,27 @@ void Game::_init_game() {
     // Start the threads
     // Testing of your implementation will presume all threads are started here
     vector<string> board_lines = utils::read_lines(this->params.filename);
-    vector<uint> tmp_vec;
+    vector<uint> tmp_row_curr;
+    vector<uint> tmp_row_next;
     for (size_t i = 0; i < board_lines.size(); i++) {
         vector<string> line = utils::split(board_lines[i], ' ');
-        for (size_t j = 0; i < line.size(); j++) {
+        board_width = line.size();
+        for (size_t j = 0; j < board_width; j++) {
             uint tmp_cell = std::stoi(line[j]);
-            tmp_vec.push_back(tmp_cell);
-            cout<<"line size is "<<line.size()<<endl;
+            tmp_row_curr.push_back(tmp_cell);
+            tmp_row_next.push_back(0);
             cout << "pushed element " << j << " to line " << i << endl;
         }
         cout << "attemp to push vecor to matrix" << endl;
-        curr_board.push_back(tmp_vec);
-        tmp_vec.clear();
-        board_width = line.size();
+        curr_board.push_back(tmp_row_curr);
+        next_board.push_back(tmp_row_next);
+        tmp_row_curr.clear(); 
+        tmp_row_next.clear();
     }
     board_heigt = board_lines.size();
     cout << "finished board initialize" << endl;
     for (uint i = 0; i < m_thread_num; i++) {
-        Thread* temp_thread = new Thread_worker(i, jobs_queue);
+        Thread* temp_thread = new Thread_worker(i, &jobs_queue);
         m_threadpool.push_back(temp_thread);
     }
 
