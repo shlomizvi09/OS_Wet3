@@ -1,5 +1,8 @@
 #include "Game.hpp"
 
+#include <algorithm>
+#include <cmath>
+
 static const char* colors[7] = {BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN};
 /*--------------------------------------------------------------------------------
 
@@ -43,7 +46,7 @@ void Game::_init_game() {
         for (size_t j = 0; i < line.size(); j++) {
             uint tmp_cell = std::stoi(line[j]);
             tmp_vec.push_back(tmp_cell);
-            cout<<"line size is "<<line.size()<<endl;
+            cout << "line size is " << line.size() << endl;
             cout << "pushed element " << j << " to line " << i << endl;
         }
         cout << "attemp to push vecor to matrix" << endl;
@@ -67,6 +70,27 @@ void Game::_step(uint curr_gen) {
     // Push jobs to queue
     // Wait for the workers to finish calculating
     // Swap pointers between current and next field
+
+    int num_of_jobs_base = ceil((double)board_heigt / m_thread_num);
+    for (size_t i = 0; i < m_gen_num; i += num_of_jobs_base) {
+        uint top = std::min((int)board_heigt, (int)(i + num_of_jobs_base)) - 1;
+        uint bottom = i;
+        Job new_job = Job(&curr_board, &next_board, top, bottom, board_width, board_heigt, 1);
+        jobs_queue.push(new_job);
+    }
+
+    // Phase 1 //
+
+    // TODO: assign each job to a thread
+
+    /*
+    1. create a jobs_queue with phase = 1
+    2. create threads and give each thread a job
+    3. call job->execute
+    4. wait for all threads to finish
+    5. clear the queue
+    6. repeat step 1 with phase = 2 or change all jobs->phase in jobs_queue to 2
+    */
 }
 
 void Game::_destroy_game() {
