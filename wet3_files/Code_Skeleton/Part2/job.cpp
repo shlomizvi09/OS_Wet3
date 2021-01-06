@@ -1,13 +1,13 @@
 #include "Job.hpp"
-
 #include <algorithm>
 
+/*
 Job::Job(const int_mat &curr_board, int_mat &next_board,
          uint top_line, uint bottom_line) : curr_board(curr_board),
                                             next_board(next_board),
                                             top_row(top_row),
                                             bottom_row(bottom_row) {
-}
+}*/
 
 uint Job::get_num_of_live_neighbors(int i, int j) {
     int res = 0;

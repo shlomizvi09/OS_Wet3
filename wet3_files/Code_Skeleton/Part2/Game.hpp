@@ -1,7 +1,8 @@
 #ifndef __GAMERUN_H
 #define __GAMERUN_H
-#include "../Part1/Headers.hpp"
-#include "../Part1/PCQueue.hpp"
+
+#include "Headers.hpp"
+#include "PCQueue.hpp"
 #include "Job.hpp"
 #include "Thread.hpp"
 #include "Thread_worker.hpp"
@@ -34,12 +35,11 @@ struct game_params {
 /*--------------------------------------------------------------------------------
 									Class Declaration
 --------------------------------------------------------------------------------*/
-class Thread_worker;
 
 class Game {
    public:
     Game(game_params p);
-    ~Game();
+    ~Game(){}
     void run();                              // Runs the game
     const vector<double> gen_hist() const;   // Returns the generation timing histogram
     const vector<double> tile_hist() const;  // Returns the tile timing histogram

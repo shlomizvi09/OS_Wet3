@@ -1,6 +1,6 @@
 #ifndef __JOB_H
 #define __JOB_H
-#include "Game.hpp"
+//#include "Game.hpp"
 #include "Thread.hpp"
 
 class Job {

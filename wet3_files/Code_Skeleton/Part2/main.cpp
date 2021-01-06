@@ -1,4 +1,6 @@
 #include "Game.hpp"
+#include "Semaphore.hpp"
+#include "Headers.hpp"
 
 static inline game_params parse_input_args(int argc, char** argv);
 static inline void usage(const char* mes);
@@ -11,7 +13,7 @@ int main(int argc, char** argv) {
     game_params params = parse_input_args(argc, argv);
     Game g(params);
     g.run();
-    calc_and_append_statistics(g.thread_num(), g.gen_hist(), g.tile_hist());
+    //calc_and_append_statistics(g.thread_num(), g.gen_hist(), g.tile_hist());
     return 0;
 }
 /*--------------------------------------------------------------------------------
