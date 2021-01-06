@@ -11,6 +11,7 @@ class Job {
     uint bottom_row;
     uint width;
     uint height;
+    int phase;
 
    public:
     Job(const int_mat &curr_board, int_mat &next_board,
