@@ -11,9 +11,10 @@ class Job {
     uint width;
     uint height;
     int phase;
+    int *working_threads;
 
     Job(int_mat *curr_board, int_mat *next_board,
-        uint top_row, uint bottom_row, uint width, uint height, int phase);
+        uint top_row, uint bottom_row, uint width, uint height, int phase, int *working_threads);
     Job(const Job &old_job);
     ~Job() {}
     void execute();
