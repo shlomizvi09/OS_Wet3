@@ -8,9 +8,9 @@
             "name": "g++ - Build and debug active file",
             "type": "cppdbg",
             "request": "launch",
-            "program": "a.out",
+            "program": "wet3_files/Code_Skeleton/Part2/a.out",
             "args": [
-                "tiny.txt",
+                "wet3_files/tiny.txt",
                 "3",
                 "2",
                 "n",
