@@ -49,9 +49,9 @@ void Game::_init_game() {
             uint tmp_cell = std::stoi(line[j]);
             tmp_row_curr.push_back(tmp_cell);
             tmp_row_next.push_back(0);
-            cout << "pushed element " << j << " to line " << i << endl;
+            // cout << "pushed element " << j << " to line " << i << endl;
         }
-        cout << "attemp to push vecor to matrix" << endl;
+        // cout << "attemp to push vecor to matrix" << endl;
         curr_board.push_back(tmp_row_curr);
         next_board.push_back(tmp_row_next);
         tmp_row_curr.clear();
@@ -59,7 +59,7 @@ void Game::_init_game() {
     }
     board_heigt = board_lines.size();
     m_thread_num = std::min(m_thread_num, board_heigt);
-    cout << "finished board initialize" << endl;
+    // cout << "finished board initialize" << endl;
     for (uint i = 0; i < m_thread_num; i++) {
         Thread* temp_thread = new Thread_worker(i, &jobs_queue);
         m_threadpool.push_back(temp_thread);
@@ -181,7 +181,7 @@ inline void Game::print_board(const char* header) {
         if (header != NULL)
             cout << "<------------" << header << "------------>" << endl;
 
-        cout << u8"╔" << string(u8"═") * this->board_heigt << u8"╗" << endl;
+        cout << u8"╔" << string(u8"═") * this->board_width << u8"╗" << endl;
         for (uint i = 0; i < this->board_heigt; ++i) {
             cout << u8"║";
             for (uint j = 0; j < this->board_width; ++j) {
