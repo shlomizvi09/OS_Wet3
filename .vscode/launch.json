@@ -11,8 +11,8 @@
             "program": "wet3_files/Code_Skeleton/Part2/a.out",
             "args": [
                 "wet3_files/small.txt",
-                "13",
-                "12",
+                "45",
+                "19",
                 "n",
                 "y"
             ],

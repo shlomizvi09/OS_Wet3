@@ -58,6 +58,7 @@ void Game::_init_game() {
         tmp_row_next.clear();
     }
     board_heigt = board_lines.size();
+    m_thread_num = std::min(m_thread_num, board_heigt);
     cout << "finished board initialize" << endl;
     for (uint i = 0; i < m_thread_num; i++) {
         Thread* temp_thread = new Thread_worker(i, &jobs_queue);
@@ -82,18 +83,18 @@ void Game::_step(uint curr_gen) {
     //     jobs_queue.push(new_job);
     // }
 
-    int quanta = floor((double)board_heigt / m_thread_num);
-    int approx = quanta * m_thread_num;
-    uint bottom = quanta;
-    uint top = 0;
-    for (size_t i = 1; i < m_thread_num; i++) {
-        Job new_job = Job(&curr_board, &next_board, top, bottom - 1, board_width, board_heigt, 1, &working_threads);
+    int threads_to_divide = m_thread_num;
+    int rows_to_divide = board_heigt;
+    int start = 0;
+
+    while (threads_to_divide > 0) {
+        int tmp = floor(rows_to_divide / threads_to_divide);
+        Job new_job = Job(&curr_board, &next_board, start, start + tmp - 1, board_width, board_heigt, 1, &working_threads);
         jobs_queue.push(new_job);
-        bottom += quanta;
-        top += quanta;
+        start += tmp;
+        rows_to_divide -= tmp;
+        threads_to_divide -= 1;
     }
-    Job new_job = Job(&curr_board, &next_board, top, board_heigt - 1, board_width, board_heigt, 1, &working_threads);
-    jobs_queue.push(new_job);
 
     while (working_threads != 0) {
         sleep(0);
@@ -105,16 +106,18 @@ void Game::_step(uint curr_gen) {
     //     Job new_job = Job(&next_board, &curr_board, top, bottom, board_width, board_heigt, 2, &working_threads);
     //     jobs_queue.push(new_job);
     // }
-    bottom = quanta;
-    top = 0;
-    for (size_t i = 1; i < m_thread_num; i++) {
-        Job new_job = Job(&next_board, &curr_board, top, bottom - 1, board_width, board_heigt, 2, &working_threads);
+    threads_to_divide = m_thread_num;
+    rows_to_divide = board_heigt;
+    start = 0;
+
+    while (threads_to_divide > 0) {
+        int tmp = floor(rows_to_divide / threads_to_divide);
+        Job new_job = Job(&next_board, &curr_board, start, start + tmp - 1, board_width, board_heigt, 2, &working_threads);
+        start += tmp;
         jobs_queue.push(new_job);
-        bottom += quanta;
-        top += quanta;
+        rows_to_divide -= tmp;
+        threads_to_divide -= 1;
     }
-    new_job = Job(&next_board, &curr_board, top, board_heigt - 1, board_width, board_heigt, 2, &working_threads);
-    jobs_queue.push(new_job);
 
     while (working_threads != 0) {
         sleep(0);
