@@ -74,23 +74,48 @@ void Game::_step(uint curr_gen) {
     // Wait for the workers to finish calculating
     // Swap pointers between current and next field
     int working_threads = m_thread_num;
-    int num_of_jobs_base = ceil((double)board_heigt / m_thread_num);
-    for (size_t i = 0; i < board_heigt; i += num_of_jobs_base) {
-        uint bottom = std::min((int)board_heigt, (int)(i + num_of_jobs_base)) - 1;
-        uint top = i;
-        Job new_job = Job(&curr_board, &next_board, top, bottom, board_width, board_heigt, 1, &working_threads);
+    // int num_of_jobs_base = ceil((double)board_heigt / m_thread_num);
+    // for (size_t i = 0; i < board_heigt; i += num_of_jobs_base) {
+    //     uint bottom = std::min((int)board_heigt, (int)(i + num_of_jobs_base)) - 1;
+    //     uint top = i;
+    //     Job new_job = Job(&curr_board, &next_board, top, bottom, board_width, board_heigt, 1, &working_threads);
+    //     jobs_queue.push(new_job);
+    // }
+
+    int quanta = floor((double)board_heigt / m_thread_num);
+    int approx = quanta * m_thread_num;
+    uint bottom = quanta;
+    uint top = 0;
+    for (size_t i = 1; i < m_thread_num; i++) {
+        Job new_job = Job(&curr_board, &next_board, top, bottom - 1, board_width, board_heigt, 1, &working_threads);
         jobs_queue.push(new_job);
+        bottom += quanta;
+        top += quanta;
     }
+    Job new_job = Job(&curr_board, &next_board, top, board_heigt - 1, board_width, board_heigt, 1, &working_threads);
+    jobs_queue.push(new_job);
+
     while (working_threads != 0) {
         sleep(0);
     }
     working_threads = m_thread_num;
-    for (size_t i = 0; i < board_heigt; i += num_of_jobs_base) {
-        uint bottom = std::min((int)board_heigt, (int)(i + num_of_jobs_base)) - 1;
-        uint top = i;
-        Job new_job = Job(&next_board, &curr_board, top, bottom, board_width, board_heigt, 2, &working_threads);
+    // for (size_t i = 0; i < board_heigt; i += num_of_jobs_base) {
+    //     uint bottom = std::min((int)board_heigt, (int)(i + num_of_jobs_base)) - 1;
+    //     uint top = i;
+    //     Job new_job = Job(&next_board, &curr_board, top, bottom, board_width, board_heigt, 2, &working_threads);
+    //     jobs_queue.push(new_job);
+    // }
+    bottom = quanta;
+    top = 0;
+    for (size_t i = 1; i < m_thread_num; i++) {
+        Job new_job = Job(&next_board, &curr_board, top, bottom - 1, board_width, board_heigt, 2, &working_threads);
         jobs_queue.push(new_job);
+        bottom += quanta;
+        top += quanta;
     }
+    new_job = Job(&next_board, &curr_board, top, board_heigt - 1, board_width, board_heigt, 2, &working_threads);
+    jobs_queue.push(new_job);
+
     while (working_threads != 0) {
         sleep(0);
     }
@@ -115,9 +140,9 @@ void Game::_destroy_game() {
     // Testing of your implementation will presume all threads are joined here
     int working_threads = m_thread_num;
     for (size_t i = 0; i < m_thread_num; i++) {
-        jobs_queue.push(Job(nullptr, nullptr, 0, 0, 0, 0, -1, &working_threads)); //to stop thread execute
+        jobs_queue.push(Job(nullptr, nullptr, 0, 0, 0, 0, -1, &working_threads));  //to stop thread execute
     }
-    while(working_threads != 0){
+    while (working_threads != 0) {
         sleep(0);
     }
 

@@ -1,0 +1,6 @@
+EffectiveThreadNum,GenNum,Gen_Rate[1/us],Avg_Gen_Time[us],Tile_Rate[1/us],Avg_Tile_Time[us],Total_Time[us]
+5,13,0.00153338,652.154,0,-nan,8478
+10,13,2.82392e-07,3.54118e+06,0,-nan,4.60354e+07
+10,13,0.000233532,4282.08,0,-nan,55667
+10,13,0.000927909,1077.69,0,-nan,14010
+12,13,7.66545e-08,1.30456e+07,0,-nan,1.69592e+08

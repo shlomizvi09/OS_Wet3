@@ -13,23 +13,19 @@ Job::Job(int_mat *curr_board, int_mat *next_board,
                                                                                                     working_threads(working_threads) {
 }
 
-Job::Job(const Job &old_job) {
+Job::Job(const Job &old_job) : top_row(old_job.top_row), bottom_row(old_job.bottom_row) {
     this->curr_board = old_job.curr_board;
     this->next_board = old_job.next_board;
-    this->top_row = old_job.top_row;
-    this->bottom_row = old_job.bottom_row;
     this->width = old_job.width;
     this->height = old_job.height;
     this->phase = old_job.phase;
     this->working_threads = old_job.working_threads;
-
-    cout<<"bottom row after copy is: "<<this->bottom_row<<endl;
 }
 
 uint Job::get_num_of_live_neighbors(int i, int j) {
     int res = 0;
     for (int row = std::max(0, i - 1); row <= std::min(i + 1, (int)height - 1); row++) {
-        for (int column = std::max(0, j - 1); column <= std::min(j + 1, (int)width); column++) {
+        for (int column = std::max(0, j - 1); column <= std::min(j + 1, (int)width - 1); column++) {
             if ((row != i || column != j) && (*curr_board)[row][column] != 0) {
                 res++;
             }
@@ -42,7 +38,7 @@ int Job::get_dominant_neighbor_color(int i, int j) {
     int colors_hist[7] = {0};
     int res = 0;
     for (int row = std::max(0, i - 1); row <= std::min(i + 1, (int)height - 1); row++) {
-        for (int column = std::max(0, j - 1); column <= std::min(j + 1, (int)width); column++) {
+        for (int column = std::max(0, j - 1); column <= std::min(j + 1, (int)width - 1); column++) {
             if ((row != i || column != j) && (*curr_board)[row][column] > 0) {
                 int tmp_color = (*curr_board)[row][column];
                 colors_hist[tmp_color] += tmp_color;
@@ -60,8 +56,8 @@ int Job::get_dominant_neighbor_color(int i, int j) {
 int Job::get_average_neighbor_color(int i, int j) {
     int res = 0;
     int num_of_live_neighbors = get_num_of_live_neighbors(i, j) + 1;
-    for (int row = std::max(0, i - 1); row <= std::min(i + 1, (int)height); row++) {
-        for (int column = std::max(0, j - 1); column <= std::min(j + 1, (int)width); column++) {
+    for (int row = std::max(0, i - 1); row <= std::min(i + 1, (int)height - 1); row++) {
+        for (int column = std::max(0, j - 1); column <= std::min(j + 1, (int)width - 1); column++) {
             res += (*curr_board)[row][column];
         }
     }
@@ -81,7 +77,6 @@ void Job::kill(int i, int j) {
 }
 
 void Job::execute() {
-    cout<<"bottom row after before execute is: "<<this->bottom_row<<endl;
     if (phase == 1) {
         phase_one_execute();
         return;
@@ -94,11 +89,9 @@ void Job::execute() {
 }
 
 void Job::phase_one_execute() {
-    cout<<"bottom row before phase 1 is: "<<this->bottom_row<<endl;
-    for (int i = top_row; i <= bottom_row; i++) {
-        for (int j = 0; j < width; j++) {
-            if (j==width-1){
-                cout<<"stop"<<endl;
+    for (uint i = top_row; i <= bottom_row; i++) {
+        for (uint j = 0; j < width; j++) {
+            if (j == width - 1) {
             }
             uint tmp_cell = (*curr_board)[i][j];
             uint live_neighbors = get_num_of_live_neighbors(i, j);
@@ -120,7 +113,6 @@ void Job::phase_one_execute() {
 }
 
 void Job::phase_two_execute() {
-    cout<<"bottom row before phase 2 is: "<<this->bottom_row<<endl;
     for (uint i = top_row; i <= bottom_row; i++) {
         for (uint j = 0; j < width; j++) {
             uint tmp_cell = (*curr_board)[i][j];
