@@ -46,7 +46,7 @@ int Job::get_dominant_neighbor_color(int i, int j) {
         }
     }
     for (size_t i = 0; i < 7; i++) {
-        if (colors_hist[i] > res) {
+        if (colors_hist[i] > colors_hist[res]) {
             res = i;
         }
     }

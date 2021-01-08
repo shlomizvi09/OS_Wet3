@@ -1,0 +1,7 @@
+main.o: main.cpp Game.hpp Headers.hpp PCQueue.hpp Semaphore.hpp Job.hpp \
+ Thread.hpp Thread_worker.hpp utils.hpp
+job.o: job.cpp Job.hpp Thread.hpp Headers.hpp
+Semaphore.o: Semaphore.cpp Semaphore.hpp Headers.hpp
+Game.o: Game.cpp Game.hpp Headers.hpp PCQueue.hpp Semaphore.hpp Job.hpp \
+ Thread.hpp Thread_worker.hpp utils.hpp
+utils.o: utils.cpp utils.hpp Headers.hpp

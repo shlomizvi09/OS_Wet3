@@ -20,7 +20,6 @@ Game::Game(game_params p) {
 }
 
 void Game::run() {
-    cout << "starting init" << endl;
     _init_game();  // Starts the threads and all other variables you need
     print_board("Initial Board");
     for (uint i = 0; i < m_gen_num; ++i) {
@@ -39,6 +38,7 @@ void Game::_init_game() {
     // Create game fields
     // Start the threads
     // Testing of your implementation will presume all threads are started here
+    pthread_mutex_init(&m_lock, NULL);
     vector<string> board_lines = utils::read_lines(this->params.filename);
     vector<uint> tmp_row_curr;
     vector<uint> tmp_row_next;
@@ -49,9 +49,7 @@ void Game::_init_game() {
             uint tmp_cell = std::stoi(line[j]);
             tmp_row_curr.push_back(tmp_cell);
             tmp_row_next.push_back(0);
-            cout << "pushed element " << j << " to line " << i << endl;
         }
-        cout << "attemp to push vecor to matrix" << endl;
         curr_board.push_back(tmp_row_curr);
         next_board.push_back(tmp_row_next);
         tmp_row_curr.clear();
@@ -59,9 +57,8 @@ void Game::_init_game() {
     }
     board_heigt = board_lines.size();
     m_thread_num = std::min(m_thread_num, board_heigt);
-    cout << "finished board initialize" << endl;
     for (uint i = 0; i < m_thread_num; i++) {
-        Thread* temp_thread = new Thread_worker(i, &jobs_queue);
+        Thread* temp_thread = new Thread_worker(i, &jobs_queue, &m_lock);
         m_threadpool.push_back(temp_thread);
     }
 
@@ -74,15 +71,8 @@ void Game::_step(uint curr_gen) {
     // Push jobs to queue
     // Wait for the workers to finish calculating
     // Swap pointers between current and next field
-    int working_threads = m_thread_num;
-    // int num_of_jobs_base = ceil((double)board_heigt / m_thread_num);
-    // for (size_t i = 0; i < board_heigt; i += num_of_jobs_base) {
-    //     uint bottom = std::min((int)board_heigt, (int)(i + num_of_jobs_base)) - 1;
-    //     uint top = i;
-    //     Job new_job = Job(&curr_board, &next_board, top, bottom, board_width, board_heigt, 1, &working_threads);
-    //     jobs_queue.push(new_job);
-    // }
 
+    int working_threads = m_thread_num;
     int threads_to_divide = m_thread_num;
     int rows_to_divide = board_heigt;
     int start = 0;
@@ -100,12 +90,6 @@ void Game::_step(uint curr_gen) {
         sleep(0);
     }
     working_threads = m_thread_num;
-    // for (size_t i = 0; i < board_heigt; i += num_of_jobs_base) {
-    //     uint bottom = std::min((int)board_heigt, (int)(i + num_of_jobs_base)) - 1;
-    //     uint top = i;
-    //     Job new_job = Job(&next_board, &curr_board, top, bottom, board_width, board_heigt, 2, &working_threads);
-    //     jobs_queue.push(new_job);
-    // }
     threads_to_divide = m_thread_num;
     rows_to_divide = board_heigt;
     start = 0;
@@ -122,19 +106,6 @@ void Game::_step(uint curr_gen) {
     while (working_threads != 0) {
         sleep(0);
     }
-
-    // Phase 1 //
-
-    // TODO: assign each job to a thread
-
-    /*
-    1. create a jobs_queue with phase = 1
-    2. create threads and give each thread a job
-    3. call job->execute
-    4. wait for all threads to finish
-    5. clear the queue
-    6. repeat step 1 with phase = 2 or change all jobs->phase in jobs_queue to 2
-    */
 }
 
 void Game::_destroy_game() {
@@ -155,6 +126,7 @@ void Game::_destroy_game() {
     for (size_t i = 0; i < m_thread_num; i++) {
         delete m_threadpool[i];
     }
+    pthread_mutex_destroy(&m_lock);
 }
 
 const vector<double> Game::gen_hist() const {
@@ -181,7 +153,7 @@ inline void Game::print_board(const char* header) {
         if (header != NULL)
             cout << "<------------" << header << "------------>" << endl;
 
-        cout << u8"╔" << string(u8"═") * this->board_heigt << u8"╗" << endl;
+        cout << u8"╔" << string(u8"═") * this->board_width << u8"╗" << endl;
         for (uint i = 0; i < this->board_heigt; ++i) {
             cout << u8"║";
             for (uint j = 0; j < this->board_width; ++j) {

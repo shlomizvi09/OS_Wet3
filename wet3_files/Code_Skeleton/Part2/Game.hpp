@@ -70,5 +70,6 @@ class Game {
     uint board_heigt;
     int_mat curr_board;
     int_mat next_board;
+    pthread_mutex_t m_lock;
 };
 #endif
