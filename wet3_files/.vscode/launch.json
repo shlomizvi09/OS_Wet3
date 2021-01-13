@@ -9,7 +9,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "Code_Skeleton/Part2/a.out",
-            "args": ["tiny.txt", "3" , "1" , "n" , "y"],
+            "args": ["small.txt", "7" , "19" , "n" , "y"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],

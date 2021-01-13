@@ -2,6 +2,8 @@
 #define __JOB_H
 #include "Thread.hpp"
 
+#define NUM_OF_COLORS 8  // including a blank square
+
 class Job {
    public:
     int_mat *curr_board;

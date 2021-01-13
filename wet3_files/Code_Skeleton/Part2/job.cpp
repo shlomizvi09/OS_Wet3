@@ -13,13 +13,7 @@ Job::Job(int_mat *curr_board, int_mat *next_board,
                                                                                                     working_threads(working_threads) {
 }
 
-Job::Job(const Job &old_job) : top_row(old_job.top_row), bottom_row(old_job.bottom_row) {
-    this->curr_board = old_job.curr_board;
-    this->next_board = old_job.next_board;
-    this->width = old_job.width;
-    this->height = old_job.height;
-    this->phase = old_job.phase;
-    this->working_threads = old_job.working_threads;
+Job::Job(const Job &old_job) : curr_board(old_job.curr_board), next_board(old_job.next_board), top_row(old_job.top_row), bottom_row(old_job.bottom_row), width(old_job.width), height(old_job.height), phase(old_job.phase), working_threads(old_job.working_threads) {
 }
 
 uint Job::get_num_of_live_neighbors(int i, int j) {
@@ -35,7 +29,7 @@ uint Job::get_num_of_live_neighbors(int i, int j) {
 }
 
 int Job::get_dominant_neighbor_color(int i, int j) {
-    int colors_hist[7] = {0};
+    int colors_hist[NUM_OF_COLORS] = {0};
     int res = 0;
     for (int row = std::max(0, i - 1); row <= std::min(i + 1, (int)height - 1); row++) {
         for (int column = std::max(0, j - 1); column <= std::min(j + 1, (int)width - 1); column++) {
@@ -45,7 +39,7 @@ int Job::get_dominant_neighbor_color(int i, int j) {
             }
         }
     }
-    for (size_t i = 0; i < 7; i++) {
+    for (size_t i = 1; i < NUM_OF_COLORS; i++) {
         if (colors_hist[i] > colors_hist[res]) {
             res = i;
         }
@@ -61,7 +55,7 @@ int Job::get_average_neighbor_color(int i, int j) {
             res += (*curr_board)[row][column];
         }
     }
-    return (int)(round((double)res / (double)num_of_live_neighbors));
+    return (int)(round((double)res / num_of_live_neighbors));
 }
 
 void Job::give_birth(int i, int j) {
